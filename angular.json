@@ -3,7 +3,7 @@
   "version": 1,
   "newProjectRoot": "projects",
   "projects": {
-    "demo1": {
+    "food-admin": {
       "projectType": "application",
       "schematics": {
         "@schematics/angular:component": {
@@ -17,7 +17,7 @@
         "build": {
           "builder": "@angular-devkit/build-angular:application",
           "options": {
-            "outputPath": "dist/demo1",
+            "outputPath": "dist/food-admin",
             "allowedCommonJsDependencies": [
               "feather-icons",
               "sweetalert2",
@@ -74,10 +74,10 @@
           "builder": "@angular-devkit/build-angular:dev-server",
           "configurations": {
             "production": {
-              "buildTarget": "demo1:build:production"
+              "buildTarget": "food-admin:build:production"
             },
             "development": {
-              "buildTarget": "demo1:build:development"
+              "buildTarget": "food-admin:build:development"
             }
           },
           "defaultConfiguration": "development"
@@ -109,5 +109,8 @@
         }
       }
     }
+  },
+  "cli": {
+    "analytics": false
   }
 }
