@@ -6,9 +6,49 @@ export const MENU: MenuItem[] = [
     isTitle: true
   },
   {
-    label: 'Dashboard',
+    label: 'Tổng quan',
     icon: 'home',
     link: '/dashboard'
+  },
+  {
+    label: 'Quản lý tài khoản',
+    isTitle: true
+  },
+  {
+    label: 'Tài khoản',
+    icon: 'user',
+    link: '/apps/email/inbox'
+  },
+  {
+    label: 'Sản phẩm',
+    isTitle: true
+  },
+  {
+    label: 'Quản lý sản phẩm',
+    icon: 'mail',
+    subItems: [
+      {
+        label: 'Tất cả sản phẩm',
+        // link: '/apps/email/inbox',
+      },
+      {
+        label: 'Danh mục',
+        // link: '/apps/email/read'
+      },
+      {
+        label: 'Chương trình giảm giá',
+        // link: '/apps/email/compose'
+      },
+    ]
+  },
+  {
+    label: 'Quản lý đơn hàng',
+    isTitle: true
+  },
+  {
+    label: 'Quản lý đơn hàng',
+    icon: 'shopping-cart',
+    link: '/apps/email/inbox'
   },
   {
     label: 'Web Apps',
