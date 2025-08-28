@@ -28,22 +28,19 @@ export const MENU: MenuItem[] = [
     icon: 'mail',
     subItems: [
       {
-        label: 'Tất cả sản phẩm',
-        // link: '/apps/email/inbox',
+        label: 'Danh mục sản phẩm',
+        link: '/manage-categories'
+        // link: '/apps/email/read'
       },
       {
-        label: 'Danh mục',
-        // link: '/apps/email/read'
+        label: 'Tất cả sản phẩm',
+        // link: '/apps/email/inbox',
       },
       {
         label: 'Chương trình giảm giá',
         // link: '/apps/email/compose'
       },
     ]
-  },
-  {
-    label: 'Quản lý đơn hàng',
-    isTitle: true
   },
   {
     label: 'Quản lý đơn hàng',

@@ -1,15 +1,14 @@
 /* You can add global styles to this file, and also import other style files */
 
-
 // Global icon font
 @import "../public/fonts/feather/style.css";
-
 
 // 3rd party plugins
 @import "highlight.js/styles/atom-one-light.css";
 @import 'ngx-owl-carousel-o/lib/styles/scss/owl.carousel';
 @import 'ngx-owl-carousel-o/lib/styles/scss/owl.theme.default';
-@import "animate.css/animate.min.css"; // used in ngx-owl-carousel-o
+@import "animate.css/animate.min.css";
+// used in ngx-owl-carousel-o
 @import "@ng-select/ng-select/themes/default.theme.css";
 @import "metismenujs/scss/metismenujs";
 @import "dropzone/dist/min/dropzone.min.css";
@@ -19,9 +18,64 @@
 @import "@siemens/ngx-datatable/themes/bootstrap";
 @import "@siemens/ngx-datatable/assets/icons";
 
-
-// NobleUI styles for LTR layout
 @import "./styles/styles.scss";
 
-// NobleUI styles for RTL layout. Replace the above style with this CSS file to enable RTL styles
-// @import "./styles/rtl-css/styles.rtl.css";
+:root {
+  --spinner-top: -17vh;
+  --pen-color: #69b9ff;
+  --pen-ring: rgba(105, 185, 255, 0.95);
+  --pen-glow1: rgba(105, 185, 255, 0.55);
+  --pen-glow2: rgba(105, 185, 255, 0.30);
+  --pen-glow3: rgba(105, 185, 255, 0.18);
+  --pen-size: 88px;
+  --pen-stroke: 4px;
+}
+
+ngx-spinner {
+  z-index: 999999 !important;
+}
+
+.pen-loader {
+  position: fixed !important;
+  left: 0 !important;
+  right: 0 !important;
+  margin-left: auto !important;
+  margin-right: auto !important;
+  top: var(--spinner-top) !important;
+  transform: translateY(-50%) !important;
+  width: var(--pen-size);
+  height: var(--pen-size);
+  pointer-events: none;
+  background: radial-gradient(circle at center, rgba(105, 185, 255, 0.16) 0 32%, transparent 33%);
+}
+
+.pen-loader::before,
+.pen-loader::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  border: var(--pen-stroke) solid var(--pen-ring);
+  box-shadow: 0 0 0 2px var(--pen-glow2),
+  0 0 12px var(--pen-glow1),
+  0 0 28px var(--pen-glow2),
+  0 0 44px var(--pen-glow3) inset;
+  transform-origin: center;
+  animation: pen-pulse 1.2s cubic-bezier(0, .2, .8, 1) infinite;
+  will-change: transform, opacity;
+}
+
+.pen-loader::after {
+  animation-delay: -.6s;
+}
+
+@keyframes pen-pulse {
+  0% {
+    transform: scale(0);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 0;
+  }
+}
