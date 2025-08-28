@@ -1,17 +1,19 @@
-import { Component, OnInit } from '@angular/core';
-import { RouterOutlet } from '@angular/router';
-import { ThemeModeService } from './core/services/theme-mode.service';
+import {Component, OnInit} from '@angular/core';
+import {RouterOutlet} from '@angular/router';
+import {ThemeModeService} from './core/services/theme-mode.service';
+import {NgxSpinnerComponent} from "ngx-spinner";
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [RouterOutlet],
+  imports: [RouterOutlet, NgxSpinnerComponent],
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss'
 })
 export class AppComponent {
-  title = 'demo1';
+  title = 'food-admin';
 
-  constructor(private themeModeService: ThemeModeService) {}
+  constructor(private themeModeService: ThemeModeService) {
+  }
 
 }
