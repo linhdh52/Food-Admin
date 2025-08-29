@@ -1,0 +1,59 @@
+<div class="datatable-toolbar" *ngIf="enableGlobalFilter">
+  <input
+    class="form-control"
+    [placeholder]="placeholder"
+    [(ngModel)]="query"
+    (ngModelChange)="applyFilter()"/>
+</div>
+
+
+<ngx-datatable
+  class="bootstrap w-100"
+  [rows]="viewRows"
+  [loadingIndicator]="loading"
+  [columnMode]="columnMode"
+  [footerHeight]="footerHeight"
+  [headerHeight]="headerHeight"
+  [limit]="limit"
+  [rowHeight]="rowHeight"
+  [sortType]="sortType"
+  (activate)="rowActivate.emit($event)"
+  (page)="page.emit($event)"
+  (sort)="sort.emit($event)">
+
+
+  <ng-container *ngFor="let c of columns">
+    <ngx-datatable-column
+      [name]="c.name"
+      [prop]="c.prop"
+      [width]="$any(c.width)"
+      [flexGrow]="c.flexGrow || 1"
+      [sortable]="c.sortable ?? true"
+      [resizeable]="c.resizeable ?? true"
+      [draggable]="c.draggable ?? true"
+      [canAutoResize]="c.canAutoResize ?? true"
+      [headerClass]="$any(c.headerClass)"
+      [cellClass]="$any(c.cellClass)">
+
+
+      <ng-template ngx-datatable-cell-template let-row="row" let-value="value" let-rowIndex="rowIndex">
+        <ng-container *ngIf="tplFor(c.prop) as tpl; else defaultCell"
+                      [ngTemplateOutlet]="tpl"
+                      [ngTemplateOutletContext]="{ $implicit: value, row: row, col: c, rowIndex: rowIndex }">
+        </ng-container>
+
+        <ng-template #defaultCell>
+          {{ getByPath(row, c.prop) }}
+        </ng-template>
+      </ng-template>
+
+
+    </ngx-datatable-column>
+  </ng-container>
+</ngx-datatable>
+
+
+<!-- Empty state -->
+<div class="datatable-empty" *ngIf="!loading && viewRows?.length === 0">
+  Không có dữ liệu phù hợp.
+</div>

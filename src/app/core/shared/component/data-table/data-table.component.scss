@@ -1,0 +1,15 @@
+:host { display: block; }
+
+
+.datatable-toolbar {
+  margin-bottom: 12px;
+  .form-control { max-width: 360px; }
+}
+
+
+.datatable-empty {
+  text-align: center;
+  color: var(--bs-secondary-color, #6c757d);
+  padding: 16px 0;
+  font-style: italic;
+}

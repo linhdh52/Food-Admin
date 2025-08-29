@@ -1,17 +1,13 @@
 import {Component, ViewChild} from '@angular/core';
 import {ColumnMode, DatatableComponent, NgxDatatableModule} from '@siemens/ngx-datatable';
-import {RouterLink} from "@angular/router";
 import {ManageCategoriesService} from "../../../core/services/manage-categories.service";
-import {HttpClient} from "@angular/common/http";
 import {filterRows} from "../../../core/util/search.utils";
+import {SHARED_IMPORTS} from "../../../core/shared/shared-imports";
 
 @Component({
   selector: 'app-manage-categories',
   standalone: true,
-  imports: [
-    NgxDatatableModule,
-    RouterLink
-  ],
+  imports: [SHARED_IMPORTS],
   templateUrl: './manage-categories.component.html',
   styleUrl: './manage-categories.component.scss'
 })
@@ -27,7 +23,6 @@ export class ManageCategoriesComponent {
 
   constructor(
     private manageCategoriesService: ManageCategoriesService,
-    private http: HttpClient
   ) {
     this.getAllCategories();
     console.log(this.ColumnMode)
