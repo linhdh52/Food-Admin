@@ -79,3 +79,12 @@ ngx-spinner {
     opacity: 0;
   }
 }
+
+.ngx-datatable.bootstrap .datatable-body-row.selected,
+.ngx-datatable.bootstrap .datatable-body-row.active {
+  background-color: #8fb5f6 !important;
+}
+.ngx-datatable.bootstrap .datatable-body-row.selected .datatable-body-cell,
+.ngx-datatable.bootstrap .datatable-body-row.active   .datatable-body-cell {
+  color: black !important;
+}

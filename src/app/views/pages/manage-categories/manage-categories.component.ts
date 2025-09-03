@@ -1,8 +1,9 @@
 import {Component, ViewChild} from '@angular/core';
-import {ColumnMode, DatatableComponent, NgxDatatableModule} from '@siemens/ngx-datatable';
+import {ColumnMode, DatatableComponent, NgxDatatableModule, SelectionType} from '@siemens/ngx-datatable';
 import {ManageCategoriesService} from "../../../core/services/manage-categories.service";
 import {filterRows} from "../../../core/util/search.utils";
 import {SHARED_IMPORTS} from "../../../core/shared/shared-imports";
+import {DataTableColumn} from "../../../core/shared/component/data-table/data-table.component";
 
 @Component({
   selector: 'app-manage-categories',
@@ -18,6 +19,16 @@ export class ManageCategoriesComponent {
   loadingIndicator = true;
   reorderable = true;
   ColumnMode = ColumnMode;
+  SelectionType = SelectionType;
+  selected: any[] = [];
+  columns: DataTableColumn[] = [
+    { name: 'ID',            prop: 'id', width: 90 },
+    { name: 'Tên danh mục',  prop: 'name',        flexGrow: 2 },
+    { name: 'Mô tả',         prop: 'description', flexGrow: 2 },
+    { name: 'Đường dẫn web', prop: 'slug' },
+    { name: 'Menu cấp',      prop: 'parentId' },
+    { name: 'State',         prop: 'address.state' },
+  ];
 
   @ViewChild('table') table: DatatableComponent
 
@@ -50,4 +61,15 @@ export class ManageCategoriesComponent {
     this.table.offset = 0;
   }
 
+  onSelect(evt: { selected: any[] }) {
+    this.selected = [...evt.selected];
+  }
+
+  onEdit(data: any) {
+    console.log(data)
+  }
+
+  onDelete(data: any) {
+
+  }
 }
