@@ -140,7 +140,7 @@
 
       <div class="form-check form-switch mb-3">
         <input class="form-check-input" type="checkbox" formControlName="active" id="activeSwitch">
-        <label class="form-check-label" for="activeSwitch">Kích hoạt</label>
+        <label class="form-check-label" for="activeSwitch">{{ categoryForm.get('active')?.value === true ? 'Hoạt động' : 'Dừng' }}</label>
       </div>
 
     </form>
@@ -148,13 +148,13 @@
   </div>
 
   <div class="offcanvas-footer border-top p-3 d-flex justify-content-center gap-2">
-    <button type="button" class="btn btn-outline-danger" (click)="categoryForm.reset()">
+    <button type="button" class="btn btn-outline-danger" (click)="resetFormAdd()">
       <i class="feather icon-delete me-1"></i> Nhập lại
     </button>
-    <button type="button" class="btn btn-outline-primary" [disabled]="categoryForm.invalid">
+    <button type="button" class="btn btn-outline-primary" [disabled]="categoryForm.invalid" (click)="saveCategory()">
       <i class="feather icon-send me-1"></i>Lưu
     </button>
-    <button type="button" class="btn btn-outline-danger"(click)="offcanvas.dismiss('Close click')">
+    <button type="button" class="btn btn-outline-danger" (click)="offcanvas.dismiss('Close click')">
       <i class="feather icon-log-out me-1"></i>Hủy
     </button>
   </div>
