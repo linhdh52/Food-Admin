@@ -5,6 +5,7 @@ import {filterRows} from "../../../core/util/search.utils";
 import {SHARED_IMPORTS} from "../../../core/shared/shared-imports";
 import {DataTableColumn} from "../../../core/shared/component/data-table/data-table.component";
 import {NgbOffcanvas} from "@ng-bootstrap/ng-bootstrap";
+import {FormBuilder, FormGroup, Validators} from "@angular/forms";
 
 @Component({
   selector: 'app-manage-categories',
@@ -31,26 +32,41 @@ export class ManageCategoriesComponent implements OnInit, AfterViewInit {
     {name: 'Menu cấp', prop: 'parentId'},
     {name: 'State', prop: 'address.state'},
   ];
+  categoryForm: FormGroup;
+  listCategoriesOption: any[] = [];
 
   constructor(
     private manageCategoriesService: ManageCategoriesService,
+    private fb: FormBuilder
   ) {
   }
 
   ngOnInit(): void {
     this.getAllCategories();
+    this.initForm();
   }
 
   ngAfterViewInit(): void {
-    // setTimeout(() => this.table?.recalculate());
+  }
+
+  initForm() {
+    this.categoryForm = this.fb.group({
+      name: ['', Validators.required],
+      slug: ['', Validators.required],
+      description: [''],
+      parentId: [null],
+      active: [true]
+    });
   }
 
   getAllCategories() {
     this.manageCategoriesService.getAllCategories()
       .subscribe({
         next: (res) => {
-          this.temp = [...res.data]
-          this.rows = res.data
+          this.temp = [...res.data];
+          this.rows = res.data;
+          this.listCategoriesOption = this.addOptionToListCategories(res.data);
+          console.log(this.listCategoriesOption)
         },
         error: (err) => console.error(err)
       });
@@ -87,4 +103,25 @@ export class ManageCategoriesComponent implements OnInit, AfterViewInit {
     });
   }
 
+  addOptionToListCategories(categories: any[], level: number = 0): any[] {
+    let result: any[] = [];
+
+    result.push({
+      isDivider: true,
+      displayName: `----- Danh mục cấp ${level + 1} -----`
+    });
+
+    categories.forEach(cat => {
+      result.push({
+        ...cat,
+        isDivider: false,
+        displayName: `${'-'.repeat(level)} ${cat.name}`.trim()
+      });
+
+      if (cat.children && cat.children.length > 0) {
+        result = result.concat(this.addOptionToListCategories(cat.children, level + 1));
+      }
+    });
+    return result;
+  }
 }

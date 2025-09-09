@@ -107,39 +107,55 @@
   </div>
 
   <div class="offcanvas-body border-top">
-    <form novalidate>
-      <div class="row">
-        <div class="col-lg-12 grid-margin stretch-card">
-          <div class="card">
-            <div class="card-body">
-              <div class="mb-3">
-                <label for="exampleInputUsername1" class="form-label">Required</label>
-                <input class="form-control" type="text" placeholder="required" ngModel name="requried" #requried="ngModel" required/>
-                @if (requried?.errors?.required) {
-                  <p class="text-danger mt-1">required error</p>
-                }
-              </div>
-              <div class="mb-3">
-                <label for="exampleInputUsername1" class="form-label">Required</label>
-                <input class="form-control" type="text" placeholder="required" ngModel name="requried" #requried="ngModel" required/>
-                @if (requried?.errors?.required) {
-                  <p class="text-danger mt-1">required error</p>
-                }
-              </div>
-            </div>
-          </div>
-        </div>
+    <form [formGroup]="categoryForm">
+      <div class="mb-3">
+        <label class="form-label">Tên danh mục</label>
+        <input type="text" class="form-control" formControlName="name" placeholder="Nhập tên danh mục">
       </div>
+
+      <div class="mb-3">
+        <label class="form-label">Đường dẫn (slug)</label>
+        <input type="text" class="form-control" formControlName="slug" placeholder="Nhập slug">
+      </div>
+
+      <div class="mb-3">
+        <label class="form-label">Mô tả</label>
+        <textarea class="form-control" rows="3" formControlName="description" placeholder="Nhập mô tả"></textarea>
+      </div>
+
+      <div class="mb-3">
+        <label class="form-label">Danh mục cha</label>
+        <select class="form-select" formControlName="parentId">
+          <option [ngValue]="null">----- Không có -----</option>
+          <ng-container *ngFor="let item of listCategoriesOption">
+            <option *ngIf="item.isDivider" disabled>
+              {{ item.displayName }}
+            </option>
+            <option *ngIf="!item.isDivider" [ngValue]="item.parentId">
+              {{ item.name }}
+            </option>
+          </ng-container>
+        </select>
+      </div>
+
+      <div class="form-check form-switch mb-3">
+        <input class="form-check-input" type="checkbox" formControlName="active" id="activeSwitch">
+        <label class="form-check-label" for="activeSwitch">Kích hoạt</label>
+      </div>
+
     </form>
+
   </div>
 
-  <div class="offcanvas-footer border-top p-3 d-flex justify-content-end gap-2">
-    <button type="button" class="btn btn-outline-primary">
+  <div class="offcanvas-footer border-top p-3 d-flex justify-content-center gap-2">
+    <button type="button" class="btn btn-outline-danger" (click)="categoryForm.reset()">
+      <i class="feather icon-delete me-1"></i> Nhập lại
+    </button>
+    <button type="button" class="btn btn-outline-primary" [disabled]="categoryForm.invalid">
       <i class="feather icon-send me-1"></i>Lưu
     </button>
-    <button type="button" class="btn btn-outline-danger"
-            (click)="offcanvas.dismiss('Close click')">
-      <i class="feather icon-delete me-1"></i>Hủy
+    <button type="button" class="btn btn-outline-danger"(click)="offcanvas.dismiss('Close click')">
+      <i class="feather icon-log-out me-1"></i>Hủy
     </button>
   </div>
 </ng-template>
