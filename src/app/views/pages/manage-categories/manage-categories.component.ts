@@ -1,9 +1,10 @@
-import {Component, ViewChild} from '@angular/core';
+import {AfterViewInit, Component, HostListener, inject, OnInit, TemplateRef, ViewChild} from '@angular/core';
 import {ColumnMode, DatatableComponent, NgxDatatableModule, SelectionType} from '@siemens/ngx-datatable';
 import {ManageCategoriesService} from "../../../core/services/manage-categories.service";
 import {filterRows} from "../../../core/util/search.utils";
 import {SHARED_IMPORTS} from "../../../core/shared/shared-imports";
 import {DataTableColumn} from "../../../core/shared/component/data-table/data-table.component";
+import {NgbOffcanvas} from "@ng-bootstrap/ng-bootstrap";
 
 @Component({
   selector: 'app-manage-categories',
@@ -12,8 +13,9 @@ import {DataTableColumn} from "../../../core/shared/component/data-table/data-ta
   templateUrl: './manage-categories.component.html',
   styleUrl: './manage-categories.component.scss'
 })
-export class ManageCategoriesComponent {
-
+export class ManageCategoriesComponent implements OnInit, AfterViewInit {
+  @ViewChild('table') table!: DatatableComponent;
+  private offcanvasService = inject(NgbOffcanvas);
   rows: any = [];
   temp: any = [];
   loadingIndicator = true;
@@ -22,21 +24,25 @@ export class ManageCategoriesComponent {
   SelectionType = SelectionType;
   selected: any[] = [];
   columns: DataTableColumn[] = [
-    { name: 'ID',            prop: 'id', width: 90 },
-    { name: 'Tên danh mục',  prop: 'name',        flexGrow: 2 },
-    { name: 'Mô tả',         prop: 'description', flexGrow: 2 },
-    { name: 'Đường dẫn web', prop: 'slug' },
-    { name: 'Menu cấp',      prop: 'parentId' },
-    { name: 'State',         prop: 'address.state' },
+    {name: 'ID', prop: 'id', width: 90},
+    {name: 'Tên danh mục', prop: 'name', flexGrow: 2},
+    {name: 'Mô tả', prop: 'description', flexGrow: 2},
+    {name: 'Đường dẫn web', prop: 'slug'},
+    {name: 'Menu cấp', prop: 'parentId'},
+    {name: 'State', prop: 'address.state'},
   ];
-
-  @ViewChild('table') table: DatatableComponent
 
   constructor(
     private manageCategoriesService: ManageCategoriesService,
   ) {
+  }
+
+  ngOnInit(): void {
     this.getAllCategories();
-    console.log(this.ColumnMode)
+  }
+
+  ngAfterViewInit(): void {
+    // setTimeout(() => this.table?.recalculate());
   }
 
   getAllCategories() {
@@ -51,7 +57,7 @@ export class ManageCategoriesComponent {
   }
 
 
-  updateFilter(ev: Event) {
+  updateFilter(ev: any) {
     const q = (ev.target as HTMLInputElement).value ?? '';
     this.rows = filterRows(this.temp, ['name'], q, {
       mode: 'AND',
@@ -72,4 +78,13 @@ export class ManageCategoriesComponent {
   onDelete(data: any) {
 
   }
+
+  openTop(templateAdd: TemplateRef<any>) {
+    this.offcanvasService.open(templateAdd, {
+      container: 'body',                 // render trực tiếp dưới <body>
+      position: 'end',                   // để có hiệu ứng slide từ phải
+      panelClass: 'offcanvas-half-centered'
+    });
+  }
+
 }
