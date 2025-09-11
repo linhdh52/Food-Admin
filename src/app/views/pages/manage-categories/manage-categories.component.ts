@@ -16,6 +16,7 @@ import {NgbOffcanvas} from "@ng-bootstrap/ng-bootstrap";
 import {FormBuilder, FormGroup, Validators} from "@angular/forms";
 import {AlertService} from "../../../core/services/alert.service";
 import {finalize} from "rxjs";
+import {DialogService} from "../../../core/services/dialog.service";
 
 @Component({
   selector: 'app-manage-categories',
@@ -48,13 +49,15 @@ export class ManageCategoriesComponent implements OnInit, AfterViewInit {
     private manageCategoriesService: ManageCategoriesService,
     private fb: FormBuilder,
     private cdr: ChangeDetectorRef,
-    private alertService: AlertService
+    private alertService: AlertService,
+    private dialogService: DialogService
   ) {
   }
 
   ngOnInit(): void {
     this.getAllCategories();
     this.initForm();
+    this.categoryForm.controls.level.disable();
   }
 
   ngAfterViewInit(): void {
@@ -66,7 +69,8 @@ export class ManageCategoriesComponent implements OnInit, AfterViewInit {
       slug: ['', Validators.required],
       description: [''],
       parentId: [null],
-      active: [true]
+      active: [true],
+      level: [0]
     });
   }
 
@@ -77,10 +81,18 @@ export class ManageCategoriesComponent implements OnInit, AfterViewInit {
           this.temp = [...res.data];
           this.rows = res.data;
           this.listCategoriesOption = this.addOptionToListCategories(res.data);
-          console.log(this.listCategoriesOption)
         },
         error: (err) => console.error(err)
       });
+  }
+
+  getNameCategory(id: any) {
+    const parent  = this.rows.find((item: any) => item.id === id);
+    if (parent) {
+      return parent.name;
+    } else {
+      return null;
+    }
   }
 
 
@@ -103,7 +115,14 @@ export class ManageCategoriesComponent implements OnInit, AfterViewInit {
   }
 
   onDelete(data: any) {
-
+    const message = `Bạn có chắc muốn xóa danh mục tên <b><span style="color:red">${data.name}</span></b>?<br/>
+                     Danh mục hiện ${data.hasChild ? 'đang có' : 'chưa có'} danh mục con phụ thuộc!`;
+    this.dialogService.confirmDialog('Xóa danh mục', message)
+      .then(result => {
+        if (result.isConfirmed) {
+          console.log('Người dùng chọn Đồng ý');
+        }
+      });
   }
 
   openTop(templateAdd: TemplateRef<any>) {
@@ -140,16 +159,29 @@ export class ManageCategoriesComponent implements OnInit, AfterViewInit {
   resetFormAdd() {
     this.categoryForm.reset();
     this.categoryForm.controls.active.setValue(true);
+    this.categoryForm.controls.level.setValue(0);
+    this.categoryForm.controls.level.disable();
     this.cdr.detectChanges();
   }
 
+  selectedParentId(event: any) {
+    const parentIdValue = this.categoryForm.controls.parentId.value;
+    if (parentIdValue != null && parentIdValue.toString().length > 0) {
+      const parent = this.listCategoriesOption.find(item => item.id === parentIdValue);
+      this.categoryForm.controls.level.setValue(parent.level + 1);
+      this.cdr.detectChanges();
+    } else {
+      this.categoryForm.controls.level.setValue(0);
+    }
+  }
+
   saveCategory() {
-    const parentId = this.categoryForm.controls.parentId.value;
     const dataAdd: any = {};
     dataAdd[`name`] = this.categoryForm.controls.name.value ? this.categoryForm.controls.name.value : null;
     dataAdd[`slug`] = this.categoryForm.controls.slug.value ? this.categoryForm.controls.slug.value : null;
     dataAdd[`description`] = this.categoryForm.controls.description.value ? this.categoryForm.controls.description.value : null;
-    dataAdd[`parentId`] = parentId != null ? (parentId + 1) : 0;
+    dataAdd[`parentId`] = this.categoryForm.controls.parentId.value ? this.categoryForm.controls.parentId.value : null;
+    dataAdd[`level`] = this.categoryForm.controls.level.value ? this.categoryForm.controls.level.value : 0;
     dataAdd[`active`] = this.categoryForm.controls.active.value ? this.categoryForm.controls.active.value : true;
     this.manageCategoriesService.createCategories(dataAdd).pipe(finalize(() => {
       this.offcanvasService.dismiss();

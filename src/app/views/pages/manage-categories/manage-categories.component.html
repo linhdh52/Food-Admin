@@ -64,7 +64,12 @@
             <ngx-datatable-column name="Tên danh mục" prop="name"></ngx-datatable-column>
             <ngx-datatable-column name="Mô tả" prop="description"></ngx-datatable-column>
             <ngx-datatable-column name="Đường dẫn web" prop="slug"></ngx-datatable-column>
-            <ngx-datatable-column name="Menu cấp" prop="parentId">
+            <ngx-datatable-column name="Menu cha" prop="parentId">
+              <ng-template ngx-datatable-cell-template let-row="row" let-value="value">
+                {{getNameCategory(value)}}
+              </ng-template>
+            </ngx-datatable-column>
+            <ngx-datatable-column name="Menu cấp" prop="level">
               <ng-template ngx-datatable-cell-template let-row="row" let-value="value">
                 Menu cấp {{ value + 1 }}
               </ng-template>
@@ -72,6 +77,11 @@
             <ngx-datatable-column name="Trạng thái" prop="active">
               <ng-template ngx-datatable-cell-template let-row="row" let-value="value">
                 {{ value === true ? 'Hoạt động' : 'Dừng' }}
+              </ng-template>
+            </ngx-datatable-column>
+            <ngx-datatable-column name="Thời gian chỉnh sửa" prop="updateDate">
+              <ng-template ngx-datatable-cell-template let-row="row" let-value="value">
+                {{ value | date:'short' }}
               </ng-template>
             </ngx-datatable-column>
             <ngx-datatable-column
@@ -125,17 +135,22 @@
 
       <div class="mb-3">
         <label class="form-label">Danh mục cha</label>
-        <select class="form-select" formControlName="parentId">
+        <select class="form-select" formControlName="parentId" (change)="selectedParentId($event)">
           <option [ngValue]="null">----- Không có -----</option>
           <ng-container *ngFor="let item of listCategoriesOption">
             <option *ngIf="item.isDivider" disabled>
               {{ item.displayName }}
             </option>
-            <option *ngIf="!item.isDivider" [ngValue]="item.parentId">
+            <option *ngIf="!item.isDivider" [ngValue]="item.id">
               {{ item.name }}
             </option>
           </ng-container>
         </select>
+      </div>
+
+      <div class="mb-3">
+        <label class="form-label">Menu cấp</label>
+        <input type="text" class="form-control" [value]="categoryForm.get('level')?.value + 1" placeholder="Chọn danh mục cha để thay đổi">
       </div>
 
       <div class="form-check form-switch mb-3">
