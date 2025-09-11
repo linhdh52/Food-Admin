@@ -115,8 +115,11 @@ export class ManageCategoriesComponent implements OnInit, AfterViewInit {
   }
 
   onDelete(data: any) {
-    const message = `Bạn có chắc muốn xóa danh mục tên <b><span style="color:red">${data.name}</span></b>?<br/>
-                     Danh mục hiện ${data.hasChild ? 'đang có' : 'chưa có'} danh mục con phụ thuộc!`;
+    let message = `Bạn có chắc muốn xóa danh mục tên <b><span style="color:red">${data.name}</span></b>?`;
+    if (data.hasChildren === true) {
+      message = message + `<br/>Danh mục hiện <b><span style="color:red">ĐANG CÓ</span></b> danh mục con phụ thuộc!`
+        + `<br/><span style="color:red">Xoá danh mục </span>`;
+    }
     this.dialogService.confirmDialog('Xóa danh mục', message)
       .then(result => {
         if (result.isConfirmed) {
