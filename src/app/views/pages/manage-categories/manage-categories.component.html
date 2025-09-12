@@ -28,7 +28,7 @@
                    (keyup)="updateFilter($event)"/>
           </div>
           <div class="col-xl-3 col-md-4 ms-auto text-end">
-            <button class="btn btn-sm btn-outline-primary mb-2 me-2" (click)="openTop(templateAdd)">
+            <button class="btn btn-sm btn-outline-primary mb-2 me-2" (click)="openTop(template)">
               <i class="feather icon-plus-circle me-1"></i>Thêm mới danh mục
             </button>
           </div>
@@ -66,7 +66,7 @@
             <ngx-datatable-column name="Đường dẫn web" prop="slug"></ngx-datatable-column>
             <ngx-datatable-column name="Menu cha" prop="parentId">
               <ng-template ngx-datatable-cell-template let-row="row" let-value="value">
-                {{getNameCategory(value)}}
+                {{ getNameCategory(value) }}
               </ng-template>
             </ngx-datatable-column>
             <ngx-datatable-column name="Menu cấp" prop="level">
@@ -91,7 +91,7 @@
               <ng-template ngx-datatable-cell-template let-row="row">
                 <div class="d-flex justify-content-end align-items-center gap-1">
 
-                  <button class="btn btn-sm btn-primary" (click)="onEdit(row); $event.stopPropagation()">
+                  <button class="btn btn-sm btn-primary" (click)="onEdit(row, template); $event.stopPropagation()">
                     <i class="feather icon-edit me-1"></i>
                   </button>
 
@@ -108,9 +108,10 @@
   </div>
 </div>
 
-<ng-template #templateAdd let-offcanvas>
+<ng-template #template let-offcanvas>
   <div class="offcanvas-header d-flex justify-content-center position-relative">
-    <h4 class="offcanvas-title m-0">Thêm mới danh mục</h4>
+    <h4 class="offcanvas-title m-0" *ngIf="!isEdit">Thêm mới danh mục</h4>
+    <h4 class="offcanvas-title m-0" *ngIf="isEdit">Chỉnh sửa danh mục</h4>
     <button type="button" class="btn btn-close position-absolute end-0 me-3"
             aria-label="Close"
             (click)="offcanvas.dismiss('Cross click')"></button>
@@ -118,6 +119,11 @@
 
   <div class="offcanvas-body border-top">
     <form [formGroup]="categoryForm">
+      <div class="mb-3" *ngIf="isEdit">
+        <label class="form-label">ID</label>
+        <input type="text" class="form-control" formControlName="id">
+      </div>
+
       <div class="mb-3">
         <label class="form-label">Tên danh mục</label>
         <input type="text" class="form-control" formControlName="name" placeholder="Nhập tên danh mục">
@@ -150,12 +156,14 @@
 
       <div class="mb-3">
         <label class="form-label">Menu cấp</label>
-        <input type="text" class="form-control" [value]="categoryForm.get('level')?.value + 1" placeholder="Chọn danh mục cha để thay đổi">
+        <input type="text" class="form-control" [value]="categoryForm.get('level')?.value + 1"
+               placeholder="Chọn danh mục cha để thay đổi">
       </div>
 
       <div class="form-check form-switch mb-3">
         <input class="form-check-input" type="checkbox" formControlName="active" id="activeSwitch">
-        <label class="form-check-label" for="activeSwitch">{{ categoryForm.get('active')?.value === true ? 'Hoạt động' : 'Dừng' }}</label>
+        <label class="form-check-label"
+               for="activeSwitch">{{ categoryForm.get('active')?.value === true ? 'Hoạt động' : 'Dừng' }}</label>
       </div>
 
     </form>
@@ -163,7 +171,7 @@
   </div>
 
   <div class="offcanvas-footer border-top p-3 d-flex justify-content-center gap-2">
-    <button type="button" class="btn btn-outline-danger" (click)="resetFormAdd()">
+    <button type="button" class="btn btn-outline-danger" (click)="resetForm()">
       <i class="feather icon-delete me-1"></i> Nhập lại
     </button>
     <button type="button" class="btn btn-outline-primary" [disabled]="categoryForm.invalid" (click)="saveCategory()">
