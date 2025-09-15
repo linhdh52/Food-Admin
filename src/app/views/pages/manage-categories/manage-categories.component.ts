@@ -16,6 +16,7 @@ import {AlertService} from "../../../core/services/alert.service";
 import {finalize} from "rxjs";
 import {DialogService} from "../../../core/services/dialog.service";
 import {OffCanvasService} from "../../../core/services/off-canvas.service";
+import {ImageCropperResult, ImageCropperService} from "../../../core/services/image-cropper.service";
 
 @Component({
   selector: 'app-manage-categories',
@@ -52,7 +53,8 @@ export class ManageCategoriesComponent implements OnInit, AfterViewInit {
     private cdr: ChangeDetectorRef,
     private alertService: AlertService,
     private dialogService: DialogService,
-    private offCanvasService: OffCanvasService
+    private offCanvasService: OffCanvasService,
+    private imageCropper: ImageCropperService
   ) {
   }
 
@@ -279,5 +281,28 @@ export class ManageCategoriesComponent implements OnInit, AfterViewInit {
     this.dataEdit = null;
     this.categoryForm.controls.id.disable();
     this.categoryForm.controls.level.disable();
+  }
+
+  async openCropper() {
+    try {
+      const result: ImageCropperResult = await this.imageCropper.open({
+        fileName: 'category.png',
+        presetKey: 'square600'
+      });
+
+      const file = this.base64ToFile(result.fileBase64, result.fileName);
+      const fd = new FormData();
+      fd.append('image', file);
+    } catch {
+    }
+  }
+
+  private base64ToFile(base64: string, filename: string): File {
+    const [head, body] = base64.split(',');
+    const mime = head.match(/:(.*?);/)?.[1] || 'image/png';
+    const bin = atob(body);
+    const u8 = new Uint8Array(bin.length);
+    for (let i = 0; i < bin.length; i++) u8[i] = bin.charCodeAt(i);
+    return new File([u8], filename, {type: mime});
   }
 }
