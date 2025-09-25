@@ -34,6 +34,7 @@ export const MENU: MenuItem[] = [
       },
       {
         label: 'Tất cả sản phẩm',
+        link: '/manage-products'
         // link: '/apps/email/inbox',
       },
       {

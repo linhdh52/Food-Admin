@@ -1,0 +1,95 @@
+<div class="offcanvas-header d-flex justify-content-between align-items-center">
+  <h5 class="m-0">Upload ảnh</h5>
+  <button type="button" class="btn btn-close" aria-label="Close" (click)="off.dismiss('close')"></button>
+</div>
+
+<div class="offcanvas-body border-top">
+  <div class="mb-3 d-flex align-items-center gap-2">
+    <label class="form-label me-2 mb-0">Chọn kích thước ảnh:</label>
+    <select class="form-select w-auto" [(ngModel)]="selectedPresetKey" (change)="applyPreset()">
+      <option *ngFor="let k of presetKeys" [ngValue]="k">{{ presets[k].label }}</option>
+    </select>
+
+    <div class="form-check ms-3">
+      <input class="form-check-input" type="checkbox" id="roundChk" [(ngModel)]="roundCropper" (change)="applyRound()"/>
+      <label class="form-check-label" for="roundChk">Khung tròn</label>
+    </div>
+  </div>
+
+  <div class="mb-3">
+    <div class="input-group">
+      <label class="input-group-text btn btn-primary mb-0" for="fileInput">Chọn file</label>
+      <input #fileInput id="fileInput" type="file" accept="image/*" (change)="onFileChange($event)" hidden/>
+      <span class="form-control bg-dark text-light">{{ fileNameUI || 'Chưa upload ảnh nào' }}</span>
+    </div>
+  </div>
+
+  <div class="row g-3">
+    <!-- Cropper -->
+    <div class="col-md-8">
+      <div class="border rounded">
+        <image-cropper
+          #cropper
+          [imageChangedEvent]="imageChangedEvent"
+          [maintainAspectRatio]="true"
+          [aspectRatio]="aspectRatio"
+          [resizeToWidth]="targetWidth"
+          [resizeToHeight]="targetHeight"
+          [onlyScaleDown]="true"
+          [roundCropper]="roundCropper"
+          [cropper]="cropperPosition"
+          [autoCrop]="true"
+          format="png"
+          (imageLoaded)="onImageLoaded()"
+          (imageCropped)="onCropped($event)"
+          (loadImageFailed)="onLoadImageFailed()"
+          style="max-width: 100%; display: block"
+        ></image-cropper>
+      </div>
+    </div>
+
+    <div class="col-md-4">
+      <div class="d-flex align-items-center justify-content-between mb-2">
+        <div class="fw-semibold">Xem trước</div>
+        <div class="text-muted small" *ngIf="outW && outH">
+          {{ outW }}×{{ outH }} • {{ (outBytes / 1024) | number:'1.0-0' }} KB
+        </div>
+      </div>
+
+      <div class="checkerboard rounded d-flex align-items-center justify-content-center p-2" style="min-height: 220px">
+        <ng-container *ngIf="previewUrl; else noImage">
+          <img
+            [src]="previewUrl"
+            [style.objectFit]="'contain'"
+            [style.maxWidth.%]="100"
+            [style.maxHeight.%]="100"
+            [style.borderRadius.px]="roundCropper ? 9999 : 8"
+            class="shadow-sm"
+            alt="preview"
+          />
+        </ng-container>
+        <ng-template #noImage>
+          <span class="text-secondary">Chưa có ảnh</span>
+        </ng-template>
+      </div>
+
+      <div class="d-flex gap-2 mt-2">
+        <button class="btn btn-outline-secondary btn-sm" (click)="downloadPreview()" [disabled]="!previewUrl">
+          <i class="feather icon-download me-1"></i> Tải thử
+        </button>
+        <button class="btn btn-outline-secondary btn-sm" (click)="copyBase64()" [disabled]="!croppedBase64">
+          <i class="feather icon-copy me-1"></i> Copy Base64
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="offcanvas-footer border-top p-3 d-flex justify-content-center gap-2">
+  <button type="button" class="btn btn-outline-secondary" (click)="clearImage()">
+    <i class="feather icon-refresh-ccw me-1"></i> Đổi ảnh khác
+  </button>
+  <button type="button" class="btn btn-outline-primary" [disabled]="!croppedBase64" (click)="useImage()">
+    <i class="feather icon-check-square me-1"></i> Dùng ảnh này
+  </button>
+</div>

@@ -50,6 +50,10 @@ export const routes: Routes = [
         path: 'manage-categories',
         loadChildren: () => import('./views/pages/manage-categories/manage-categories.router')
       },
+      {
+        path: 'manage-products',
+        loadChildren: () => import('./views/pages/manage-products/manage-products.router')
+      },
     ]
   },
   {
