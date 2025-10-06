@@ -88,3 +88,15 @@ ngx-spinner {
 .ngx-datatable.bootstrap .datatable-body-row.active   .datatable-body-cell {
   color: black !important;
 }
+
+body.page-manage-products .container,
+body.page-manage-products .container-sm,
+body.page-manage-products .container-md,
+body.page-manage-products .container-lg,
+body.page-manage-products .container-xl,
+body.page-manage-products .container-xxl {
+  max-width: 98% !important;
+  width: 98% !important;
+  padding-left: 16px;
+  padding-right: 16px;
+}

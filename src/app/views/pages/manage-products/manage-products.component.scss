@@ -1,0 +1,34 @@
+::ng-deep .offcanvas.offcanvas-end.offcanvas-half-centered {
+  --bs-offcanvas-width: 50vw;
+  right: 25vw !important;
+  max-width: none;
+
+  top: 70px;
+  bottom: auto !important;
+  height: auto !important;
+  max-height: calc(100vh - 70px);
+  overflow-y: auto;
+}
+
+@media (max-width: 768px) {
+  ::ng-deep .offcanvas.offcanvas-end.offcanvas-half-centered {
+    --bs-offcanvas-width: 100vw;
+    right: 0 !important;
+    top: 0;
+    bottom: 0;
+    height: 100vh !important;
+    max-height: 100vh;
+  }
+}
+
+.colorRed {
+  color: red !important;
+}
+
+:host ::ng-deep .datatable-body-cell,
+:host ::ng-deep .datatable-header-cell {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+

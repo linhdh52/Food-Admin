@@ -1,1 +1,192 @@
-<p>manage-products works!</p>
+<nav aria-label="breadcrumb">
+  <ol class="breadcrumb">
+    <li class="breadcrumb-item"><a routerLink=".">Quản lý sản phẩm</a></li>
+    <li class="breadcrumb-item active" aria-current="page">Danh sách sản phẩm</li>
+  </ol>
+</nav>
+<div class="row">
+  <div class="col-md-12 stretch-card">
+    <div class="card">
+      <div class="card-body">
+        <h6 class="card-title">Danh sách sản phẩm</h6>
+        <div class="row">
+          <div class="col-xl-3 col-md-4">
+            <input type="text" class="form-control form-control-sm" placeholder="Nhập tên sản phẩm cần tìm"
+                   (keyup)="updateFilter($event)"/>
+          </div>
+          <div class="col-xl-3 col-md-4 ms-auto text-end">
+            <button class="btn btn-sm btn-outline-primary mb-2 me-2" (click)="openTop(template)">
+              <i class="feather icon-plus-circle me-1"></i>Thêm mới sản phẩm
+            </button>
+            <!--            <button class="btn btn-outline-primary" (click)="openCropper()">-->
+            <!--              <i class="feather icon-image me-1"></i> Chọn & cắt ảnh-->
+            <!--            </button>-->
+          </div>
+        </div>
+        <div class="table-responsive">
+          <ngx-datatable
+            #table
+            class="bootstrap"
+            [rows]="rows"
+            [loadingIndicator]="loadingIndicator"
+            [columnMode]="ColumnMode.force"
+            [scrollbarH]="true"
+            [scrollbarV]="false"
+            [headerHeight]="50"
+            [footerHeight]="50"
+            [limit]="10"
+            rowHeight="auto"
+            [messages]="{
+              emptyMessage: 'Không có dữ liệu',
+              totalMessage: 'sản phẩm',
+              selectedMessage: 'được chọn'
+            }"
+            [selectionType]="SelectionType.checkbox"
+            [selected]="selected"
+            (select)="onSelect($event)">
+            <ngx-datatable-column
+              [width]="48"
+              [sortable]="false"
+              [canAutoResize]="false"
+              [draggable]="false"
+              [resizeable]="false"
+              [headerCheckboxable]="true"
+              [checkboxable]="true">
+            </ngx-datatable-column>
+            <ngx-datatable-column
+              name="ID"
+              prop="id"
+              [width]="idColW"
+              [canAutoResize]="false"
+              [resizeable]="false">
+            </ngx-datatable-column>
+            <ngx-datatable-column name="Tên sản phẩm" prop="name"></ngx-datatable-column>
+            <ngx-datatable-column name="Mô tả chi tiết sản phẩm" prop="description"></ngx-datatable-column>
+            <ngx-datatable-column name="Giá gốc của sản phẩm" prop="slug"></ngx-datatable-column>
+            <ngx-datatable-column name="Giá gốc của sản phẩm" prop="slug"></ngx-datatable-column>
+            <ngx-datatable-column name="Giá gốc của sản phẩm" prop="slug"></ngx-datatable-column>
+            <ngx-datatable-column name="Giá gốc của sản phẩm" prop="slug"></ngx-datatable-column>
+            <ngx-datatable-column name="Giá gốc của sản phẩm" prop="slug"></ngx-datatable-column>
+            <ngx-datatable-column name="Giá gốc của sản phẩm" prop="slug"></ngx-datatable-column>
+            <ngx-datatable-column name="Giá gốc của sản phẩm" prop="slug"></ngx-datatable-column>
+            <ngx-datatable-column name="Số lượng tồn kho" prop="parentId">
+              <ng-template ngx-datatable-cell-template let-row="row" let-value="value">
+                {{ getNameCategory(value) }}
+              </ng-template>
+            </ngx-datatable-column>
+            <ngx-datatable-column name="Đơn vị tính" prop="level">
+              <ng-template ngx-datatable-cell-template let-row="row" let-value="value">
+                Menu cấp {{ value + 1 }}
+              </ng-template>
+            </ngx-datatable-column>
+            <ngx-datatable-column name="Mã sản phẩm" prop="parentId"></ngx-datatable-column>
+            <ngx-datatable-column name="Trạng thái" prop="active">
+              <ng-template ngx-datatable-cell-template let-row="row" let-value="value">
+                {{ value === true ? 'Hoạt động' : 'Dừng' }}
+              </ng-template>
+            </ngx-datatable-column>
+            <ngx-datatable-column name="Thời gian chỉnh sửa" prop="updateDate">
+              <ng-template ngx-datatable-cell-template let-row="row" let-value="value">
+                {{ value | date:'short' }}
+              </ng-template>
+            </ngx-datatable-column>
+            <ngx-datatable-column
+              [sortable]="false" [canAutoResize]="false" [draggable]="false" [resizeable]="false" [frozenRight]="true"
+              [cellClass]="'text-nowrap'">
+
+              <ng-template ngx-datatable-cell-template let-row="row">
+                <div class="d-flex justify-content-end align-items-center gap-1">
+
+                  <button class="btn btn-sm btn-primary" (click)="onEdit(row, template); $event.stopPropagation()">
+                    <i class="feather icon-edit me-1"></i>
+                  </button>
+
+                  <button class="btn btn-sm btn-danger" (click)="onDelete(row); $event.stopPropagation()">
+                    <i class="feather icon-trash-2 me-1"></i>
+                  </button>
+                </div>
+              </ng-template>
+            </ngx-datatable-column>
+          </ngx-datatable>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<ng-template #template let-offcanvas>
+  <div class="offcanvas-header d-flex justify-content-center position-relative">
+    <h4 class="offcanvas-title m-0" *ngIf="!isEdit">Thêm mới danh mục</h4>
+    <h4 class="offcanvas-title m-0" *ngIf="isEdit">Chỉnh sửa danh mục</h4>
+    <button type="button" class="btn btn-close position-absolute end-0 me-3"
+            aria-label="Close"
+            (click)="offcanvas.dismiss('Cross click')"></button>
+  </div>
+
+  <div class="offcanvas-body border-top">
+    <form [formGroup]="categoryForm">
+      <div class="mb-3" *ngIf="isEdit">
+        <label class="form-label">ID</label>
+        <input type="text" class="form-control" formControlName="id">
+      </div>
+
+      <div class="mb-3">
+        <label class="form-label">Tên danh mục</label>
+        <input type="text" class="form-control" formControlName="name" placeholder="Nhập tên danh mục">
+      </div>
+
+      <div class="mb-3">
+        <label class="form-label">Đường dẫn (slug)</label>
+        <input type="text" class="form-control" formControlName="slug" placeholder="Nhập slug">
+      </div>
+
+      <div class="mb-3">
+        <label class="form-label">Mô tả</label>
+        <textarea class="form-control" rows="3" formControlName="description" placeholder="Nhập mô tả"></textarea>
+      </div>
+
+      <div class="mb-3">
+        <label class="form-label">Danh mục cha</label>
+        <select class="form-select" formControlName="parentId" (change)="selectedParentId($event)">
+          <option [ngValue]="null">----- Không có -----</option>
+          <ng-container *ngFor="let item of listCategoriesOption">
+            <option *ngIf="item.isDivider" disabled>
+              {{ item.displayName }}
+            </option>
+            <option *ngIf="!item.isDivider" [ngValue]="item.id">
+              {{ item.name }}
+            </option>
+          </ng-container>
+        </select>
+      </div>
+
+      <div class="mb-3">
+        <label class="form-label">Menu cấp</label>
+        <input type="text" class="form-control" [value]="categoryForm.get('level')?.value + 1"
+               placeholder="Chọn danh mục cha để thay đổi">
+      </div>
+
+      <div class="form-check form-switch mb-3">
+        <input class="form-check-input" type="checkbox" formControlName="active" id="activeSwitch">
+        <label class="form-check-label"
+               for="activeSwitch">{{ categoryForm.get('active')?.value === true ? 'Hoạt động' : 'Dừng' }}</label>
+      </div>
+
+    </form>
+
+  </div>
+
+  <div class="offcanvas-footer border-top p-3 d-flex justify-content-center gap-2">
+    <button type="button" class="btn btn-outline-danger" (click)="resetForm()">
+      <i class="feather icon-delete me-1"></i> Nhập lại
+    </button>
+    <button type="button" class="btn btn-outline-primary" [disabled]="categoryForm.invalid" (click)="saveCategory()">
+      <i class="feather icon-send me-1"></i>Lưu
+    </button>
+    <button type="button" class="btn btn-outline-danger" (click)="offcanvas.dismiss('Close click')">
+      <i class="feather icon-log-out me-1"></i>Hủy
+    </button>
+  </div>
+</ng-template>
+
+

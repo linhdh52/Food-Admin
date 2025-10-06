@@ -3,6 +3,7 @@ import { RouteConfigLoadEnd, RouteConfigLoadStart, Router, RouterOutlet } from '
 import { NavbarComponent } from '../navbar/navbar.component';
 import { SidebarComponent } from '../sidebar/sidebar.component';
 import { FooterComponent } from '../footer/footer.component';
+import {SHARED_IMPORTS} from "../../../core/shared/shared-imports";
 
 @Component({
   selector: 'app-base',
@@ -11,7 +12,8 @@ import { FooterComponent } from '../footer/footer.component';
     RouterOutlet,
     NavbarComponent,
     SidebarComponent,
-    FooterComponent
+    FooterComponent,
+    SHARED_IMPORTS
   ],
   templateUrl: './base.component.html',
   styleUrl: './base.component.scss'
@@ -25,7 +27,7 @@ export class BaseComponent implements OnInit {
 
   ngOnInit(): void {
     // Spinner for lazy loading modules/components
-    this.router.events.forEach((event) => { 
+    this.router.events.forEach((event) => {
       if (event instanceof RouteConfigLoadStart) {
         this.isLoading = true;
       } else if (event instanceof RouteConfigLoadEnd) {
