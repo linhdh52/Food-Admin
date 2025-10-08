@@ -39,6 +39,7 @@ export const MENU: MenuItem[] = [
       },
       {
         label: 'Chương trình giảm giá',
+        link: '/manage-discounts'
         // link: '/apps/email/compose'
       },
     ]

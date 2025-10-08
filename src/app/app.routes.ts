@@ -53,7 +53,10 @@ export const routes: Routes = [
       {
         path: 'manage-products',
         loadChildren: () => import('./views/pages/manage-products/manage-products.router')
-      },
+      }, {
+        path: 'manage-discounts',
+        loadChildren: () => import('./views/pages/manage-discounts/manage-discounts.router')
+      }
     ]
   },
   {

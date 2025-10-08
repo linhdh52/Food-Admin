@@ -1,25 +1,23 @@
 import {AfterViewInit, ChangeDetectorRef, Component, OnInit, TemplateRef, ViewChild} from '@angular/core';
-import {FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators} from "@angular/forms";
-import {ColumnMode, DatatableComponent, SelectionType} from '@siemens/ngx-datatable';
-import {SHARED_IMPORTS} from "../../../core/shared/shared-imports";
-import {DataTableColumn} from "../../../core/shared/component/data-table/data-table.component";
-import {ManageCategoriesService} from "../../../core/services/manage-categories.service";
+import {ColumnMode, DatatableComponent, SelectionType} from "@siemens/ngx-datatable";
+import {FormBuilder, FormGroup, Validators} from "@angular/forms";
+import {ManageProductsService} from "../../../core/services/manage-products.service";
 import {AlertService} from "../../../core/services/alert.service";
 import {DialogService} from "../../../core/services/dialog.service";
 import {OffCanvasService} from "../../../core/services/off-canvas.service";
 import {ImageCropperResult, ImageCropperService} from "../../../core/services/image-cropper.service";
 import {filterRows} from "../../../core/util/search.utils";
 import {finalize} from "rxjs";
-import {ManageProductsService} from "../../../core/services/manage-products.service";
+import {SHARED_IMPORTS} from "../../../core/shared/shared-imports";
 
 @Component({
-  selector: 'app-manage-products',
+  selector: 'app-manage-discounts',
   standalone: true,
   imports: [SHARED_IMPORTS],
-  templateUrl: './manage-products.component.html',
-  styleUrl: './manage-products.component.scss'
+  templateUrl: './manage-discounts.component.html',
+  styleUrl: './manage-discounts.component.scss'
 })
-export class ManageProductsComponent implements OnInit, AfterViewInit {
+export class ManageDiscountsComponent implements OnInit, AfterViewInit {
   @ViewChild('table') table!: DatatableComponent;
   rows: any = [];
   temp: any = [];

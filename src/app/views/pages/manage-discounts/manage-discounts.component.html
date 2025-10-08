@@ -1,26 +1,23 @@
 <nav aria-label="breadcrumb">
   <ol class="breadcrumb">
     <li class="breadcrumb-item"><a routerLink=".">Quản lý sản phẩm</a></li>
-    <li class="breadcrumb-item active" aria-current="page">Danh sách sản phẩm</li>
+    <li class="breadcrumb-item active" aria-current="page">Chương trình giảm giá</li>
   </ol>
 </nav>
 <div class="row">
   <div class="col-md-12 stretch-card">
     <div class="card">
       <div class="card-body">
-        <h6 class="card-title">Danh sách sản phẩm</h6>
+        <h6 class="card-title">Danh sách các Chương trình giảm giá</h6>
         <div class="row">
           <div class="col-xl-3 col-md-4">
-            <input type="text" class="form-control form-control-sm" placeholder="Nhập tên sản phẩm cần tìm"
+            <input type="text" class="form-control form-control-sm" placeholder="Nhập tên voucher cần tìm"
                    (keyup)="updateFilter($event)"/>
           </div>
           <div class="col-xl-3 col-md-4 ms-auto text-end">
             <button class="btn btn-sm btn-outline-primary mb-2 me-2" (click)="openTop(template)">
-              <i class="feather icon-plus-circle me-1"></i>Thêm mới sản phẩm
+              <i class="feather icon-plus-circle me-1"></i>Thêm mới voucher
             </button>
-            <!--            <button class="btn btn-outline-primary" (click)="openCropper()">-->
-            <!--              <i class="feather icon-image me-1"></i> Chọn & cắt ảnh-->
-            <!--            </button>-->
           </div>
         </div>
         <div class="table-responsive">
@@ -38,7 +35,7 @@
             rowHeight="auto"
             [messages]="{
               emptyMessage: 'Không có dữ liệu',
-              totalMessage: 'sản phẩm',
+              totalMessage: 'voucher',
               selectedMessage: 'được chọn'
             }"
             [selectionType]="SelectionType.checkbox"
