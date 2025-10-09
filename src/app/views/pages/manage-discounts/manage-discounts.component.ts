@@ -1,7 +1,6 @@
 import {AfterViewInit, ChangeDetectorRef, Component, OnInit, TemplateRef, ViewChild} from '@angular/core';
 import {ColumnMode, DatatableComponent, SelectionType} from "@siemens/ngx-datatable";
 import {FormBuilder, FormGroup, Validators} from "@angular/forms";
-import {ManageProductsService} from "../../../core/services/manage-products.service";
 import {AlertService} from "../../../core/services/alert.service";
 import {DialogService} from "../../../core/services/dialog.service";
 import {OffCanvasService} from "../../../core/services/off-canvas.service";
@@ -9,6 +8,7 @@ import {ImageCropperResult, ImageCropperService} from "../../../core/services/im
 import {filterRows} from "../../../core/util/search.utils";
 import {finalize} from "rxjs";
 import {SHARED_IMPORTS} from "../../../core/shared/shared-imports";
+import {ManageDiscountsService} from "../../../core/services/manage-discounts.service";
 
 @Component({
   selector: 'app-manage-discounts',
@@ -33,7 +33,7 @@ export class ManageDiscountsComponent implements OnInit, AfterViewInit {
   idColW = 60;
 
   constructor(
-    private manageProductsService: ManageProductsService,
+    private manageDiscountsService: ManageDiscountsService,
     private fb: FormBuilder,
     private cdr: ChangeDetectorRef,
     private alertService: AlertService,
@@ -65,7 +65,7 @@ export class ManageDiscountsComponent implements OnInit, AfterViewInit {
   }
 
   getAllProducts() {
-    this.manageProductsService.getAllProducts()
+    this.manageDiscountsService.getAllDiscounts()
       .subscribe({
         next: (res) => {
           this.temp = [...res.data];
@@ -133,7 +133,7 @@ export class ManageDiscountsComponent implements OnInit, AfterViewInit {
     this.dialogService.confirmDialog('Xóa danh mục', message)
       .then(result => {
         if (result.isConfirmed) {
-          this.manageProductsService.deleteCategoriesByID(data.id).pipe(finalize(() => {
+          this.manageDiscountsService.deleteDiscountsByID(data.id).pipe(finalize(() => {
             this.offCanvasService.close();
           })).subscribe(response => {
             if (response.code === 200 && response.data) {
@@ -227,7 +227,7 @@ export class ManageDiscountsComponent implements OnInit, AfterViewInit {
       dataEdit[`parentId`] = this.categoryForm.controls.parentId.value ? this.categoryForm.controls.parentId.value : null;
       dataEdit[`level`] = this.categoryForm.controls.level.value ? this.categoryForm.controls.level.value : 0;
       dataEdit[`active`] = this.categoryForm.controls.active.value ? this.categoryForm.controls.active.value : true;
-      this.manageProductsService.editCategories(dataEdit).pipe(finalize(() => {
+      this.manageDiscountsService.editDiscounts(dataEdit).pipe(finalize(() => {
         this.offCanvasService.close();
       })).subscribe(response => {
         if (response.code === 200 && response.data) {
@@ -247,7 +247,7 @@ export class ManageDiscountsComponent implements OnInit, AfterViewInit {
       dataAdd[`parentId`] = this.categoryForm.controls.parentId.value ? this.categoryForm.controls.parentId.value : null;
       dataAdd[`level`] = this.categoryForm.controls.level.value ? this.categoryForm.controls.level.value : 0;
       dataAdd[`active`] = this.categoryForm.controls.active.value ? this.categoryForm.controls.active.value : true;
-      this.manageProductsService.createCategories(dataAdd).pipe(finalize(() => {
+      this.manageDiscountsService.createDiscounts(dataAdd).pipe(finalize(() => {
         this.offCanvasService.close();
       })).subscribe(response => {
         if (response.code === 200 && response.data) {
