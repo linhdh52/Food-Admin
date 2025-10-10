@@ -1,22 +1,22 @@
 <nav aria-label="breadcrumb">
   <ol class="breadcrumb">
     <li class="breadcrumb-item"><a routerLink=".">Quản lý sản phẩm</a></li>
-    <li class="breadcrumb-item active" aria-current="page">Chương trình giảm giá</li>
+    <li class="breadcrumb-item active" aria-current="page">Chương trình khuyến mãi giảm giá</li>
   </ol>
 </nav>
 <div class="row">
   <div class="col-md-12 stretch-card">
     <div class="card">
       <div class="card-body">
-        <h6 class="card-title">Danh sách các Chương trình giảm giá</h6>
+        <h6 class="card-title">Danh sách các Chương trình khuyến mãi giảm giá</h6>
         <div class="row">
           <div class="col-xl-3 col-md-4">
-            <input type="text" class="form-control form-control-sm" placeholder="Nhập tên voucher cần tìm"
+            <input type="text" class="form-control form-control-sm" placeholder="Nhập tên chương trình giảm giá cần tìm"
                    (keyup)="updateFilter($event)"/>
           </div>
           <div class="col-xl-3 col-md-4 ms-auto text-end">
             <button class="btn btn-sm btn-outline-primary mb-2 me-2" (click)="openTop(template)">
-              <i class="feather icon-plus-circle me-1"></i>Thêm mới voucher
+              <i class="feather icon-plus-circle me-1"></i>Thêm mới chương trình
             </button>
           </div>
         </div>
@@ -113,8 +113,8 @@
 
 <ng-template #template let-offcanvas>
   <div class="offcanvas-header d-flex justify-content-center position-relative">
-    <h4 class="offcanvas-title m-0" *ngIf="!isEdit">Thêm mới danh mục</h4>
-    <h4 class="offcanvas-title m-0" *ngIf="isEdit">Chỉnh sửa danh mục</h4>
+    <h4 class="offcanvas-title m-0" *ngIf="!isEdit">Thêm mới chương trình giảm giá</h4>
+    <h4 class="offcanvas-title m-0" *ngIf="isEdit">Chỉnh sửa chương trình giảm giá</h4>
     <button type="button" class="btn btn-close position-absolute end-0 me-3"
             aria-label="Close"
             (click)="offcanvas.dismiss('Cross click')"></button>
