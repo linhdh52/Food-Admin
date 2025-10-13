@@ -27,10 +27,11 @@ export class ManageDiscountsComponent implements OnInit, AfterViewInit {
   selected: any[] = [];
   isEdit: boolean = false;
   dataEdit: any = null;
-  categoryForm: FormGroup;
-  listCategoriesOption: any[] = [];
-  listCategoriesOptionNotChange: any[] = [];
+  discountForm: FormGroup;
   idColW = 60;
+  LIST_DATE: any = [];
+  LIST_SCOPE: any = [];
+  LIST_DISCOUNT_TYPE: any = [];
 
   constructor(
     private manageDiscountsService: ManageDiscountsService,
@@ -41,6 +42,9 @@ export class ManageDiscountsComponent implements OnInit, AfterViewInit {
     private offCanvasService: OffCanvasService,
     private imageCropper: ImageCropperService
   ) {
+    this.LIST_DATE = this.manageDiscountsService.getListDate();
+    this.LIST_SCOPE = this.manageDiscountsService.getListScope();
+    this.LIST_DISCOUNT_TYPE = this.manageDiscountsService.getListDiscountType();
   }
 
   ngOnInit(): void {
@@ -53,13 +57,34 @@ export class ManageDiscountsComponent implements OnInit, AfterViewInit {
   }
 
   initForm() {
-    this.categoryForm = this.fb.group({
+    this.discountForm = this.fb.group({
       id: [null],
+      code: ['', Validators.required],
       name: ['', Validators.required],
-      slug: ['', Validators.required],
       description: [''],
-      parentId: [null],
+      scope: ['ORDER', Validators.required],
+      discountType: ['PERCENT', Validators.required],
+      discountValue: ['', Validators.required],
+      minOrderValue: ['', Validators.required],
+      maxDiscount: ['', Validators.required],
       active: [true],
+      stackable: [true],
+      priority: [''],
+      usageLimit: [''],
+      usedCount: [''],
+      maxUsagePerUser: [''],
+      startDate: [''],
+      endDate: [''],
+      dayOfWeek: [''],
+      userId: [''],
+      startTime: [''],
+      endTime: [''],
+      segmentCode: [''],
+      paymentMethod: [''],
+      regionCode: [''],
+      // Bor
+      slug: ['', Validators.required],
+      parentId: [null],
       level: [0]
     });
   }
@@ -70,22 +95,10 @@ export class ManageDiscountsComponent implements OnInit, AfterViewInit {
         next: (res) => {
           this.temp = [...res.data];
           this.rows = res.data;
-          this.listCategoriesOption = this.addOptionToListCategories(res.data);
-          this.listCategoriesOptionNotChange = this.addOptionToListCategories(res.data);
         },
         error: (err) => console.error(err)
       });
   }
-
-  getNameCategory(id: any) {
-    const parent = this.rows.find((item: any) => item.id === id);
-    if (parent) {
-      return parent.name;
-    } else {
-      return null;
-    }
-  }
-
 
   updateFilter(ev: any) {
     const q = (ev.target as HTMLInputElement).value ?? '';
@@ -105,7 +118,7 @@ export class ManageDiscountsComponent implements OnInit, AfterViewInit {
     this.resetForm();
     this.isEdit = true;
     this.dataEdit = data;
-    this.categoryForm.patchValue({
+    this.discountForm.patchValue({
       id: data.id,
       name: data.name,
       slug: data.slug,
@@ -114,9 +127,8 @@ export class ManageDiscountsComponent implements OnInit, AfterViewInit {
       active: data.active,
       level: data.level,
     });
-    this.categoryForm.controls.id.disable();
-    this.categoryForm.controls.level.disable();
-    this.listCategoriesOption = this.listCategoriesOptionNotChange.filter(item => item.id != this.dataEdit.id);
+    this.discountForm.controls.id.disable();
+    this.discountForm.controls.level.disable();
     this.offCanvasService.open(template, {
       container: 'body',
       position: 'end',
@@ -152,9 +164,8 @@ export class ManageDiscountsComponent implements OnInit, AfterViewInit {
   openTop(template: TemplateRef<any>) {
     this.resetForm();
     this.isEdit = false;
-    this.listCategoriesOption = this.listCategoriesOptionNotChange;
-    this.categoryForm.controls.id.disable();
-    this.categoryForm.controls.level.disable();
+    this.discountForm.controls.id.disable();
+    this.discountForm.controls.level.disable();
     this.offCanvasService.open(template, {
       container: 'body',
       position: 'end',
@@ -185,7 +196,7 @@ export class ManageDiscountsComponent implements OnInit, AfterViewInit {
 
   resetForm() {
     if (this.isEdit && this.dataEdit) {
-      this.categoryForm.patchValue({
+      this.discountForm.patchValue({
         id: this.dataEdit.id,
         name: this.dataEdit.name,
         slug: this.dataEdit.slug,
@@ -194,39 +205,29 @@ export class ManageDiscountsComponent implements OnInit, AfterViewInit {
         active: this.dataEdit.active,
         level: this.dataEdit.level,
       });
-      this.listCategoriesOption = this.listCategoriesOptionNotChange.filter(item => item.id != this.dataEdit.id);
     } else {
-      this.categoryForm.reset();
-      this.categoryForm.controls.active.setValue(true);
-      this.categoryForm.controls.level.setValue(0);
-      this.listCategoriesOption = this.listCategoriesOptionNotChange;
+      this.discountForm.reset();
+      this.discountForm.controls.active.setValue(true);
+      this.discountForm.controls.level.setValue(0);
     }
-    this.categoryForm.controls.id.disable();
-    this.categoryForm.controls.level.disable();
+    this.discountForm.controls.id.disable();
+    this.discountForm.controls.level.disable();
     this.cdr.detectChanges();
   }
 
-  selectedParentId(event: any) {
-    const parentIdValue = this.categoryForm.controls.parentId.value;
-    if (parentIdValue != null && parentIdValue.toString().length > 0) {
-      const parent = this.listCategoriesOption.find(item => item.id === parentIdValue);
-      this.categoryForm.controls.level.setValue(parent.level + 1);
-      this.cdr.detectChanges();
-    } else {
-      this.categoryForm.controls.level.setValue(0);
-    }
+  selectedScope(event: any) {
   }
 
   saveCategory() {
     if (this.isEdit && this.dataEdit) {
       const dataEdit: any = {};
       dataEdit[`id`] = this.dataEdit.id;
-      dataEdit[`name`] = this.categoryForm.controls.name.value ? this.categoryForm.controls.name.value : null;
-      dataEdit[`slug`] = this.categoryForm.controls.slug.value ? this.categoryForm.controls.slug.value : null;
-      dataEdit[`description`] = this.categoryForm.controls.description.value ? this.categoryForm.controls.description.value : null;
-      dataEdit[`parentId`] = this.categoryForm.controls.parentId.value ? this.categoryForm.controls.parentId.value : null;
-      dataEdit[`level`] = this.categoryForm.controls.level.value ? this.categoryForm.controls.level.value : 0;
-      dataEdit[`active`] = this.categoryForm.controls.active.value ? this.categoryForm.controls.active.value : true;
+      dataEdit[`name`] = this.discountForm.controls.name.value ? this.discountForm.controls.name.value : null;
+      dataEdit[`slug`] = this.discountForm.controls.slug.value ? this.discountForm.controls.slug.value : null;
+      dataEdit[`description`] = this.discountForm.controls.description.value ? this.discountForm.controls.description.value : null;
+      dataEdit[`parentId`] = this.discountForm.controls.parentId.value ? this.discountForm.controls.parentId.value : null;
+      dataEdit[`level`] = this.discountForm.controls.level.value ? this.discountForm.controls.level.value : 0;
+      dataEdit[`active`] = this.discountForm.controls.active.value ? this.discountForm.controls.active.value : true;
       this.manageDiscountsService.editDiscounts(dataEdit).pipe(finalize(() => {
         this.offCanvasService.close();
       })).subscribe(response => {
@@ -241,12 +242,12 @@ export class ManageDiscountsComponent implements OnInit, AfterViewInit {
       });
     } else {
       const dataAdd: any = {};
-      dataAdd[`name`] = this.categoryForm.controls.name.value ? this.categoryForm.controls.name.value : null;
-      dataAdd[`slug`] = this.categoryForm.controls.slug.value ? this.categoryForm.controls.slug.value : null;
-      dataAdd[`description`] = this.categoryForm.controls.description.value ? this.categoryForm.controls.description.value : null;
-      dataAdd[`parentId`] = this.categoryForm.controls.parentId.value ? this.categoryForm.controls.parentId.value : null;
-      dataAdd[`level`] = this.categoryForm.controls.level.value ? this.categoryForm.controls.level.value : 0;
-      dataAdd[`active`] = this.categoryForm.controls.active.value ? this.categoryForm.controls.active.value : true;
+      dataAdd[`name`] = this.discountForm.controls.name.value ? this.discountForm.controls.name.value : null;
+      dataAdd[`slug`] = this.discountForm.controls.slug.value ? this.discountForm.controls.slug.value : null;
+      dataAdd[`description`] = this.discountForm.controls.description.value ? this.discountForm.controls.description.value : null;
+      dataAdd[`parentId`] = this.discountForm.controls.parentId.value ? this.discountForm.controls.parentId.value : null;
+      dataAdd[`level`] = this.discountForm.controls.level.value ? this.discountForm.controls.level.value : 0;
+      dataAdd[`active`] = this.discountForm.controls.active.value ? this.discountForm.controls.active.value : true;
       this.manageDiscountsService.createDiscounts(dataAdd).pipe(finalize(() => {
         this.offCanvasService.close();
       })).subscribe(response => {
@@ -265,8 +266,8 @@ export class ManageDiscountsComponent implements OnInit, AfterViewInit {
   private resetEditStatus() {
     this.isEdit = false;
     this.dataEdit = null;
-    this.categoryForm.controls.id.disable();
-    this.categoryForm.controls.level.disable();
+    this.discountForm.controls.id.disable();
+    this.discountForm.controls.level.disable();
   }
 
   async openCropper() {

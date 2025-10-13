@@ -11,7 +11,8 @@
         <h6 class="card-title">Danh sách các Chương trình khuyến mãi giảm giá</h6>
         <div class="row">
           <div class="col-xl-3 col-md-4">
-            <input type="text" class="form-control form-control-sm" placeholder="Nhập tên chương trình giảm giá cần tìm"
+            <input type="text" class="form-control form-control-sm"
+                   placeholder="Nhập tên chương trình giảm giá cần tìm"
                    (keyup)="updateFilter($event)"/>
           </div>
           <div class="col-xl-3 col-md-4 ms-auto text-end">
@@ -57,26 +58,26 @@
               [canAutoResize]="false"
               [resizeable]="false">
             </ngx-datatable-column>
-            <ngx-datatable-column name="Tên sản phẩm" prop="name"></ngx-datatable-column>
+            <ngx-datatable-column name="Mã khuyến mãi" prop="code"></ngx-datatable-column>
+            <ngx-datatable-column name="Tên chương trình" prop="name"></ngx-datatable-column>
             <ngx-datatable-column name="Mô tả" prop="description"></ngx-datatable-column>
-            <ngx-datatable-column name="Giá gốc của sản phẩm" prop="price"></ngx-datatable-column>
-            <ngx-datatable-column name="Giá gốc của sản phẩm" prop="slug"></ngx-datatable-column>
-            <ngx-datatable-column name="Giá gốc của sản phẩm" prop="slug"></ngx-datatable-column>
-            <ngx-datatable-column name="Giá gốc của sản phẩm" prop="slug"></ngx-datatable-column>
-            <ngx-datatable-column name="Giá gốc của sản phẩm" prop="slug"></ngx-datatable-column>
-            <ngx-datatable-column name="Giá gốc của sản phẩm" prop="slug"></ngx-datatable-column>
-            <ngx-datatable-column name="Số lượng tồn kho" prop="parentId">
-              <ng-template ngx-datatable-cell-template let-row="row" let-value="value">
-                {{ getNameCategory(value) }}
-              </ng-template>
-            </ngx-datatable-column>
-            <ngx-datatable-column name="Đơn vị tính" prop="level">
-              <ng-template ngx-datatable-cell-template let-row="row" let-value="value">
-                Menu cấp {{ value + 1 }}
-              </ng-template>
-            </ngx-datatable-column>
-            <ngx-datatable-column name="Mã sản phẩm" prop="parentId"></ngx-datatable-column>
-            <ngx-datatable-column name="Danh mục sản phẩm" prop="categoryName"></ngx-datatable-column>
+            <ngx-datatable-column name="Phạm vi" prop="scope"></ngx-datatable-column>
+            <ngx-datatable-column name="Kiểu giảm giá" prop="discountType"></ngx-datatable-column>
+            <ngx-datatable-column name="Giá trị giảm" prop="discountValue"></ngx-datatable-column>
+            <ngx-datatable-column name="Giá trị đơn tối thiểu" prop="minOrderValue"></ngx-datatable-column>
+            <ngx-datatable-column name="Mức giảm tối đa" prop="maxDiscount"></ngx-datatable-column>
+            <ngx-datatable-column name="Có cho cộng dồn với mã khác không" prop="stackable"></ngx-datatable-column>
+            <ngx-datatable-column name="Mức" prop="maxDiscount"></ngx-datatable-column>
+            <ngx-datatable-column name="Độ ưu tiên áp dụng" prop="priority"></ngx-datatable-column>
+            <ngx-datatable-column name="Tổng số lần dùng toàn hệ thống" prop="usageLimit"></ngx-datatable-column>
+            <ngx-datatable-column name="Số lần đã dùng" prop="usedCount"></ngx-datatable-column>
+            <ngx-datatable-column name="Số lần tối đa mỗi user được dùng" prop="maxUsagePerUser"></ngx-datatable-column>
+            <ngx-datatable-column name="Thời điểm bắt đầu" prop="startDate"></ngx-datatable-column>
+            <ngx-datatable-column name="Thời điểm kết thúc" prop="endDate"></ngx-datatable-column>
+            <ngx-datatable-column name="Danh sách ngày trong tuần" prop="dayOfWeek"></ngx-datatable-column>
+            <ngx-datatable-column name="Danh sách user được áp dụng" prop="userId"></ngx-datatable-column>
+            <ngx-datatable-column name="Giờ bắt đầu áp dụng trong ngày" prop="startTime"></ngx-datatable-column>
+            <ngx-datatable-column name="Giờ kết thúc áp dụng trong ngày" prop="endTime"></ngx-datatable-column>
             <ngx-datatable-column name="Trạng thái" prop="active">
               <ng-template ngx-datatable-cell-template let-row="row" let-value="value">
                 {{ value === true ? 'Hoạt động' : 'Dừng' }}
@@ -121,20 +122,20 @@
   </div>
 
   <div class="offcanvas-body border-top">
-    <form [formGroup]="categoryForm">
+    <form [formGroup]="discountForm">
       <div class="mb-3" *ngIf="isEdit">
         <label class="form-label">ID</label>
         <input type="text" class="form-control" formControlName="id">
       </div>
 
       <div class="mb-3">
-        <label class="form-label">Tên danh mục</label>
-        <input type="text" class="form-control" formControlName="name" placeholder="Nhập tên danh mục">
+        <label class="form-label">Mã chương trình giảm giá</label>
+        <input type="text" class="form-control" formControlName="code" placeholder="Nhập mã chương trình">
       </div>
 
       <div class="mb-3">
-        <label class="form-label">Đường dẫn (slug)</label>
-        <input type="text" class="form-control" formControlName="slug" placeholder="Nhập slug">
+        <label class="form-label">Tên chương trình giảm giá</label>
+        <input type="text" class="form-control" formControlName="name" placeholder="Nhập tên chương trình giảm giá">
       </div>
 
       <div class="mb-3">
@@ -143,14 +144,10 @@
       </div>
 
       <div class="mb-3">
-        <label class="form-label">Danh mục cha</label>
-        <select class="form-select" formControlName="parentId" (change)="selectedParentId($event)">
-          <option [ngValue]="null">----- Không có -----</option>
-          <ng-container *ngFor="let item of listCategoriesOption">
-            <option *ngIf="item.isDivider" disabled>
-              {{ item.displayName }}
-            </option>
-            <option *ngIf="!item.isDivider" [ngValue]="item.id">
+        <label class="form-label">Phạm vi áp dụng</label>
+        <select class="form-select" formControlName="scope" (change)="selectedScope($event)">
+          <ng-container *ngFor="let item of LIST_SCOPE">
+            <option [ngValue]="item.id">
               {{ item.name }}
             </option>
           </ng-container>
@@ -158,15 +155,78 @@
       </div>
 
       <div class="mb-3">
-        <label class="form-label">Menu cấp</label>
-        <input type="text" class="form-control" [value]="categoryForm.get('level')?.value + 1"
-               placeholder="Chọn danh mục cha để thay đổi">
+        <label class="form-label">Kiểu giảm</label>
+        <select class="form-select" formControlName="discountType" (change)="selectedScope($event)">
+          <ng-container *ngFor="let item of LIST_DISCOUNT_TYPE">
+            <option [ngValue]="item.id">
+              {{ item.name }}
+            </option>
+          </ng-container>
+        </select>
       </div>
 
-      <div class="form-check form-switch mb-3">
-        <input class="form-check-input" type="checkbox" formControlName="active" id="activeSwitch">
-        <label class="form-check-label"
-               for="activeSwitch">{{ categoryForm.get('active')?.value === true ? 'Hoạt động' : 'Dừng' }}</label>
+      <div class="mb-3">
+        <label class="form-label">Giá trị giảm</label>
+        <input type="text" class="form-control" formControlName="discountValue" placeholder="Nhập giá trị giảm">
+      </div>
+
+      <div class="mb-3">
+        <label class="form-label">Giá trị đơn tối thiểu</label>
+        <input type="text" class="form-control" formControlName="minOrderValue"
+               placeholder="Nhập giá trị đơn tối thiểu">
+      </div>
+
+      <div class="mb-3">
+        <label class="form-label">Mức giảm tối đa</label>
+        <input type="text" class="form-control" formControlName="maxDiscount" placeholder="Nhập mức giảm tối đa">
+      </div>
+
+      <div class="mb-3">
+        <label class="form-label">Giá trị giảm</label>
+        <input type="text" class="form-control" formControlName="discountValue" placeholder="Nhập giá trị giảm">
+      </div>
+
+      <div class="mb-3">
+        <label class="form-label">Có cho cộng dồn với mã khác không</label>
+        <div class="form-check form-switch mb-3">
+          <input class="form-check-input" type="checkbox" formControlName="stackable" id="stackableSwitch">
+          <label class="form-check-label"
+                 for="stackableSwitch">{{ discountForm.get('stackable')?.value === true ? 'Có' : 'Không' }}</label>
+        </div>
+      </div>
+
+      <div class="mb-3">
+        <label class="form-label">Giá trị giảm</label>
+        <input type="text" class="form-control" formControlName="discountValue" placeholder="Nhập giá trị giảm">
+      </div>
+
+      <div class="mb-3">
+        <label class="form-label">Giá trị giảm</label>
+        <input type="text" class="form-control" formControlName="discountValue" placeholder="Nhập giá trị giảm">
+      </div>
+
+      <div class="mb-3">
+        <label class="form-label">Giá trị giảm</label>
+        <input type="text" class="form-control" formControlName="discountValue" placeholder="Nhập giá trị giảm">
+      </div>
+
+      <div class="mb-3">
+        <label class="form-label">Giá trị giảm</label>
+        <input type="text" class="form-control" formControlName="discountValue" placeholder="Nhập giá trị giảm">
+      </div>
+
+      <div class="mb-3">
+        <label class="form-label">Giá trị giảm</label>
+        <input type="text" class="form-control" formControlName="discountValue" placeholder="Nhập giá trị giảm">
+      </div>
+
+      <div class="mb-3">
+        <label class="form-label">Trạng thái</label>
+        <div class="form-check form-switch mb-3">
+          <input class="form-check-input" type="checkbox" formControlName="active" id="activeSwitch">
+          <label class="form-check-label"
+                 for="activeSwitch">{{ discountForm.get('active')?.value === true ? 'Hoạt động' : 'Dừng' }}</label>
+        </div>
       </div>
 
     </form>
@@ -177,7 +237,7 @@
     <button type="button" class="btn btn-outline-danger" (click)="resetForm()">
       <i class="feather icon-delete me-1"></i> Nhập lại
     </button>
-    <button type="button" class="btn btn-outline-primary" [disabled]="categoryForm.invalid" (click)="saveCategory()">
+    <button type="button" class="btn btn-outline-primary" [disabled]="discountForm.invalid" (click)="saveCategory()">
       <i class="feather icon-send me-1"></i>Lưu
     </button>
     <button type="button" class="btn btn-outline-danger" (click)="offcanvas.dismiss('Close click')">

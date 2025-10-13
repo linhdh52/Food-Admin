@@ -6,7 +6,8 @@
   top: 70px;
   bottom: auto !important;
   height: auto !important;
-  max-height: calc(100vh - 70px);
+  //max-height: calc(100vh - 70px);
+  max-height: 90vh !important;
   overflow-y: auto;
 }
 
