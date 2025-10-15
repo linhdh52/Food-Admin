@@ -48,7 +48,7 @@ export class ManageDiscountsComponent implements OnInit, AfterViewInit {
   }
 
   ngOnInit(): void {
-    this.getAllProducts();
+    this.getAllDiscounts();
     this.initForm();
     this.idColW = this.fitByChars(this.rows, 'id');
   }
@@ -69,7 +69,7 @@ export class ManageDiscountsComponent implements OnInit, AfterViewInit {
       maxDiscount: ['', Validators.required],
       active: [true],
       stackable: [true],
-      priority: [''],
+      // priority: [''],
       usageLimit: [''],
       usedCount: [''],
       maxUsagePerUser: [''],
@@ -82,14 +82,10 @@ export class ManageDiscountsComponent implements OnInit, AfterViewInit {
       segmentCode: [''],
       paymentMethod: [''],
       regionCode: [''],
-      // Bor
-      slug: ['', Validators.required],
-      parentId: [null],
-      level: [0]
     });
   }
 
-  getAllProducts() {
+  getAllDiscounts() {
     this.manageDiscountsService.getAllDiscounts()
       .subscribe({
         next: (res) => {
@@ -125,10 +121,8 @@ export class ManageDiscountsComponent implements OnInit, AfterViewInit {
       description: data.description,
       parentId: data.parentId,
       active: data.active,
-      level: data.level,
     });
     this.discountForm.controls.id.disable();
-    this.discountForm.controls.level.disable();
     this.offCanvasService.open(template, {
       container: 'body',
       position: 'end',
@@ -150,7 +144,7 @@ export class ManageDiscountsComponent implements OnInit, AfterViewInit {
           })).subscribe(response => {
             if (response.code === 200 && response.data) {
               this.alertService.success('Xoá danh mục thành công!');
-              this.getAllProducts();
+              this.getAllDiscounts();
             } else {
               this.alertService.error(response.message);
             }
@@ -164,8 +158,10 @@ export class ManageDiscountsComponent implements OnInit, AfterViewInit {
   openTop(template: TemplateRef<any>) {
     this.resetForm();
     this.isEdit = false;
-    this.discountForm.controls.id.disable();
-    this.discountForm.controls.level.disable();
+    this.discountForm.controls.scope.setValue('ORDER');
+    this.discountForm.controls.discountType.setValue('PERCENT');
+    this.discountForm.controls.active.setValue(true);
+    this.discountForm.controls.stackable.setValue(true);
     this.offCanvasService.open(template, {
       container: 'body',
       position: 'end',
@@ -203,15 +199,12 @@ export class ManageDiscountsComponent implements OnInit, AfterViewInit {
         description: this.dataEdit.description,
         parentId: this.dataEdit.parentId,
         active: this.dataEdit.active,
-        level: this.dataEdit.level,
       });
     } else {
       this.discountForm.reset();
       this.discountForm.controls.active.setValue(true);
-      this.discountForm.controls.level.setValue(0);
     }
     this.discountForm.controls.id.disable();
-    this.discountForm.controls.level.disable();
     this.cdr.detectChanges();
   }
 
@@ -226,14 +219,13 @@ export class ManageDiscountsComponent implements OnInit, AfterViewInit {
       dataEdit[`slug`] = this.discountForm.controls.slug.value ? this.discountForm.controls.slug.value : null;
       dataEdit[`description`] = this.discountForm.controls.description.value ? this.discountForm.controls.description.value : null;
       dataEdit[`parentId`] = this.discountForm.controls.parentId.value ? this.discountForm.controls.parentId.value : null;
-      dataEdit[`level`] = this.discountForm.controls.level.value ? this.discountForm.controls.level.value : 0;
       dataEdit[`active`] = this.discountForm.controls.active.value ? this.discountForm.controls.active.value : true;
       this.manageDiscountsService.editDiscounts(dataEdit).pipe(finalize(() => {
         this.offCanvasService.close();
       })).subscribe(response => {
         if (response.code === 200 && response.data) {
           this.alertService.success('Chỉnh sửa danh mục thành công!');
-          this.getAllProducts();
+          this.getAllDiscounts();
         } else {
           this.alertService.error(response.message);
         }
@@ -246,14 +238,13 @@ export class ManageDiscountsComponent implements OnInit, AfterViewInit {
       dataAdd[`slug`] = this.discountForm.controls.slug.value ? this.discountForm.controls.slug.value : null;
       dataAdd[`description`] = this.discountForm.controls.description.value ? this.discountForm.controls.description.value : null;
       dataAdd[`parentId`] = this.discountForm.controls.parentId.value ? this.discountForm.controls.parentId.value : null;
-      dataAdd[`level`] = this.discountForm.controls.level.value ? this.discountForm.controls.level.value : 0;
       dataAdd[`active`] = this.discountForm.controls.active.value ? this.discountForm.controls.active.value : true;
       this.manageDiscountsService.createDiscounts(dataAdd).pipe(finalize(() => {
         this.offCanvasService.close();
       })).subscribe(response => {
         if (response.code === 200 && response.data) {
           this.alertService.success('Tạo mới danh mục thành công!');
-          this.getAllProducts();
+          this.getAllDiscounts();
         } else {
           this.alertService.error(response.message);
         }
@@ -267,7 +258,6 @@ export class ManageDiscountsComponent implements OnInit, AfterViewInit {
     this.isEdit = false;
     this.dataEdit = null;
     this.discountForm.controls.id.disable();
-    this.discountForm.controls.level.disable();
   }
 
   async openCropper() {

@@ -68,7 +68,7 @@
             <ngx-datatable-column name="Mức giảm tối đa" prop="maxDiscount"></ngx-datatable-column>
             <ngx-datatable-column name="Có cho cộng dồn với mã khác không" prop="stackable"></ngx-datatable-column>
             <ngx-datatable-column name="Mức" prop="maxDiscount"></ngx-datatable-column>
-            <ngx-datatable-column name="Độ ưu tiên áp dụng" prop="priority"></ngx-datatable-column>
+            <!--            <ngx-datatable-column name="Độ ưu tiên áp dụng" prop="priority"></ngx-datatable-column>-->
             <ngx-datatable-column name="Tổng số lần dùng toàn hệ thống" prop="usageLimit"></ngx-datatable-column>
             <ngx-datatable-column name="Số lần đã dùng" prop="usedCount"></ngx-datatable-column>
             <ngx-datatable-column name="Số lần tối đa mỗi user được dùng" prop="maxUsagePerUser"></ngx-datatable-column>
@@ -128,46 +128,54 @@
         <input type="text" class="form-control" formControlName="id">
       </div>
 
-      <div class="mb-3">
-        <label class="form-label">Mã chương trình giảm giá</label>
-        <input type="text" class="form-control" formControlName="code" placeholder="Nhập mã chương trình">
+      <div class="col-md-12">
+        <div class="row">
+          <div class="mb-3 col-md-6">
+            <label class="form-label">Mã chương trình giảm giá</label>
+            <input type="text" class="form-control" formControlName="code" placeholder="Nhập mã chương trình">
+          </div>
+
+          <div class="mb-3 col-md-6">
+            <label class="form-label">Tên chương trình giảm giá</label>
+            <input type="text" class="form-control" formControlName="name"
+                   placeholder="Nhập tên chương trình giảm giá">
+          </div>
+        </div>
       </div>
 
-      <div class="mb-3">
-        <label class="form-label">Tên chương trình giảm giá</label>
-        <input type="text" class="form-control" formControlName="name" placeholder="Nhập tên chương trình giảm giá">
+      <div class="col-md-12">
+        <div class="row">
+          <div class="mb-3 col-md-6">
+            <label class="form-label">Phạm vi áp dụng</label>
+            <select class="form-select" formControlName="scope" (change)="selectedScope($event)">
+              <ng-container *ngFor="let item of LIST_SCOPE">
+                <option [ngValue]="item.id">
+                  {{ item.name }}
+                </option>
+              </ng-container>
+            </select>
+          </div>
+
+          <div class="mb-3 col-md-6">
+            <label class="form-label">Kiểu giảm</label>
+            <select class="form-select" formControlName="discountType" (change)="selectedScope($event)">
+              <ng-container *ngFor="let item of LIST_DISCOUNT_TYPE">
+                <option [ngValue]="item.id">
+                  {{ item.name }}
+                </option>
+              </ng-container>
+            </select>
+          </div>
+        </div>
       </div>
 
-      <div class="mb-3">
-        <label class="form-label">Mô tả</label>
-        <textarea class="form-control" rows="3" formControlName="description" placeholder="Nhập mô tả"></textarea>
-      </div>
-
-      <div class="mb-3">
-        <label class="form-label">Phạm vi áp dụng</label>
-        <select class="form-select" formControlName="scope" (change)="selectedScope($event)">
-          <ng-container *ngFor="let item of LIST_SCOPE">
-            <option [ngValue]="item.id">
-              {{ item.name }}
-            </option>
-          </ng-container>
-        </select>
-      </div>
-
-      <div class="mb-3">
-        <label class="form-label">Kiểu giảm</label>
-        <select class="form-select" formControlName="discountType" (change)="selectedScope($event)">
-          <ng-container *ngFor="let item of LIST_DISCOUNT_TYPE">
-            <option [ngValue]="item.id">
-              {{ item.name }}
-            </option>
-          </ng-container>
-        </select>
-      </div>
-
-      <div class="mb-3">
-        <label class="form-label">Giá trị giảm</label>
-        <input type="text" class="form-control" formControlName="discountValue" placeholder="Nhập giá trị giảm">
+      <div class="col-md-12">
+        <div class="row">
+          <div class="mb-3 col-md-6">
+            <label class="form-label">Giá trị giảm</label>
+            <input type="text" class="form-control" formControlName="discountValue" placeholder="Nhập giá trị giảm">
+          </div>
+        </div>
       </div>
 
       <div class="mb-3">
@@ -196,8 +204,40 @@
       </div>
 
       <div class="mb-3">
-        <label class="form-label">Giá trị giảm</label>
-        <input type="text" class="form-control" formControlName="discountValue" placeholder="Nhập giá trị giảm">
+        <label class="form-label">Tổng số lần dùng toàn hệ thống</label>
+        <input type="text" class="form-control" formControlName="usageLimit"
+               placeholder="Nhập tổng số lần dùng toàn hệ thống">
+      </div>
+
+      <div class="mb-3">
+        <label class="form-label">Số lần đã dùng</label>
+        <input type="text" class="form-control" formControlName="usedCount" placeholder="Số lần đã dùng">
+      </div>
+
+      <div class="mb-3">
+        <label class="form-label">Số lần tối đa mỗi user được dùng</label>
+        <input type="text" class="form-control" formControlName="maxUsagePerUser"
+               placeholder="Nhập số lần tối đa mỗi user được dùng">
+      </div>
+
+      <div class="mb-3">
+        <label class="form-label">Thời điểm bắt đầu</label>
+        <input type="text" class="form-control" formControlName="startDate" placeholder="Nhập giá trị giảm">
+      </div>
+
+      <div class="mb-3">
+        <label class="form-label">Thời điểm kết thúc</label>
+        <input type="text" class="form-control" formControlName="endDate" placeholder="Nhập giá trị giảm">
+      </div>
+
+      <div class="mb-3">
+        <label class="form-label">Các ngày trong tuần được áp dụng</label>
+        <input type="text" class="form-control" formControlName="dayOfWeek" placeholder="Nhập giá trị giảm">
+      </div>
+
+      <div class="mb-3">
+        <label class="form-label">Danh sách user được áp dụng</label>
+        <input type="text" class="form-control" formControlName="userId" placeholder="Nhập giá trị giảm">
       </div>
 
       <div class="mb-3">
@@ -206,18 +246,13 @@
       </div>
 
       <div class="mb-3">
-        <label class="form-label">Giá trị giảm</label>
-        <input type="text" class="form-control" formControlName="discountValue" placeholder="Nhập giá trị giảm">
+        <label class="form-label">Giờ bắt đầu áp dụng trong ngày</label>
+        <input type="text" class="form-control" formControlName="startTime" placeholder="Nhập giá trị giảm">
       </div>
 
       <div class="mb-3">
-        <label class="form-label">Giá trị giảm</label>
-        <input type="text" class="form-control" formControlName="discountValue" placeholder="Nhập giá trị giảm">
-      </div>
-
-      <div class="mb-3">
-        <label class="form-label">Giá trị giảm</label>
-        <input type="text" class="form-control" formControlName="discountValue" placeholder="Nhập giá trị giảm">
+        <label class="form-label">Giờ kết thúc áp dụng trong ngày</label>
+        <input type="text" class="form-control" formControlName="endTime" placeholder="Nhập giá trị giảm">
       </div>
 
       <div class="mb-3">
@@ -227,6 +262,11 @@
           <label class="form-check-label"
                  for="activeSwitch">{{ discountForm.get('active')?.value === true ? 'Hoạt động' : 'Dừng' }}</label>
         </div>
+      </div>
+
+      <div class="mb-3">
+        <label class="form-label">Mô tả</label>
+        <textarea class="form-control" rows="3" formControlName="description" placeholder="Nhập mô tả"></textarea>
       </div>
 
     </form>
