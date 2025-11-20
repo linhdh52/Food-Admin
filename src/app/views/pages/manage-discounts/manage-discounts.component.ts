@@ -32,6 +32,7 @@ export class ManageDiscountsComponent implements OnInit, AfterViewInit {
   LIST_DATE: any = [];
   LIST_SCOPE: any = [];
   LIST_DISCOUNT_TYPE: any = [];
+  textDiscountValue = '%';
 
   constructor(
     private manageDiscountsService: ManageDiscountsService,
@@ -209,6 +210,12 @@ export class ManageDiscountsComponent implements OnInit, AfterViewInit {
   }
 
   selectedScope(event: any) {
+    const discountTypeValue = this.discountForm.controls.discountType.value;
+    if (discountTypeValue === 'AMOUNT') {
+      this.textDiscountValue = 'VND';
+    } else {
+      this.textDiscountValue = '%';
+    }
   }
 
   saveCategory() {
